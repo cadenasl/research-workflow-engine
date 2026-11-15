@@ -21,5 +21,11 @@ def test_save_and_get_task():
 
     repository.save_task(task)
     retrieved = repository.get_task(task.task_id)
+    assert retrieved is not None
+    assert retrieved.task_id == task.task_id
+    assert retrieved.task_type == task.task_type
+    assert retrieved.payload == task.payload
+    assert retrieved.status == task.status
+    assert retrieved.created_at == task.created_at
 
-  
+
