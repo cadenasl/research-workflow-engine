@@ -43,4 +43,21 @@ def test_get_task_returns_independent_copy(sample_task: Task):
     assert retrieved_again is not None
     assert retrieved_again.payload.dataset_id == "ds-123"
 
+def test_save_task_stores_independent_copy(sample_task: Task):
+    repository = TaskRepository()
+    repository.save_task(sample_task)
+    sample_task.payload.dataset_id = "ds-999"
+    retrieved = repository.get_task(sample_task.task_id)
+    assert retrieved is not None
+    assert retrieved.payload.dataset_id == "ds-123"
+def test_get_nonexistent_task():
+    repository = TaskRepository()
+    generated_id=uuid4()
+    retrieved = repository.get_task(generated_id)
+    assert retrieved is None
+def test_list_empty_repository():
+    repository = TaskRepository()
+    result=repository.list_all()
+    assert result == []
+
 
