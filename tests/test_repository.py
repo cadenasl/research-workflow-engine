@@ -59,5 +59,25 @@ def test_list_empty_repository():
     repository = TaskRepository()
     result=repository.list_all()
     assert result == []
+def test_save_existing_task_replaces_previous(sample_task: Task):
+    repository = TaskRepository()
 
+    repository.save_task(sample_task)
+
+    # Change the task's status to RUNNING
+    sample_task.status = TaskStatus.RUNNING
+
+    # Save the updated task using the same UUID
+    repository.save_task(sample_task)
+    # Retrieve the task
+    retrieved = repository.get_task(sample_task.task_id)
+
+    # Verify:
+    # 1. The UUID hasn't changed
+    # 2. The stored status is RUNNING
+    # 3. The repository still contains only one task
+    assert retrieved is not None
+    assert retrieved.task_id == sample_task.task_id
+    assert retrieved.status == TaskStatus.RUNNING
+    assert len(repository.list_all()) == 1
 
