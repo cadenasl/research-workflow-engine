@@ -1,5 +1,7 @@
-from pydantic import BaseModel, StringConstraints,ConfigDict
+from pydantic import BaseModel, StringConstraints, ConfigDict
 from typing import Annotated, Literal
+from uuid import UUID
+from datetime import datetime
 
 # {
 #   "task_type": "process_dataset",
@@ -17,3 +19,10 @@ class TaskCreate(BaseModel):
     model_config = ConfigDict(extra="forbid")
     task_type:  Literal["process_dataset"]
     payload: ProcessDatasetPayload
+
+class TaskResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    task_id: UUID
+    task_type: str
+    status: str
+    created_at: datetime
