@@ -3,7 +3,6 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, status
 from app.services.task_service import TaskService
 from app.schemas import TaskCreate, TaskResponse
-from app.taskRepository import TaskRepository
 from app.dependencies import get_task_service
 
 app = FastAPI(
