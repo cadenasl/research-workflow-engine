@@ -3,16 +3,31 @@ from time import strptime
 from urllib import response
 
 from fastapi.testclient import TestClient
+import pytest
 from uuid import UUID
 from app.main import app
 from app.models import TaskStatus, TaskType
 import datetime as dt
+from app.services.task_service import TaskService
+from app.taskRepository import TaskRepository
+from app.dependencies import get_task_service
+
+@pytest.fixture
+def client():
+    repository = TaskRepository()
+    service = TaskService(repository)
+
+    app.dependency_overrides[get_task_service] = lambda: service
+
+    with TestClient(app) as test_client:
+        yield test_client
+
+    app.dependency_overrides.pop(get_task_service, None)
 
 
-client = TestClient(app)
 
 
-def test_create_task_returns_201():
+def test_create_task_returns_201(client: TestClient):
     response = client.post(
         "/tasks",
         json={
